@@ -273,7 +273,7 @@ void split(const int key_input, const int child_right_input, page_tree* page, in
 	int key_idx, child_idx;
 	printf("inserindo chave %d\n", key_input);
 
-	if(key_input == 1)
+	if(key_input == 3)
 	{
 		printf("vai\n");
 	}
@@ -298,6 +298,8 @@ void split(const int key_input, const int child_right_input, page_tree* page, in
 	for(i = 0, key_idx = ORDER - 2, child_idx = ORDER -1; i < size_split; i++, key_idx--, child_idx --)
 	{
 		pageInsert(*new_page, page->keys[key_idx], page->child[child_idx-1], page->child[child_idx]);
+		page->child[child_idx] = NIL;
+		//page->child[child_idx-1] = NIL;
 		page->nKeys--;
 
 	}
@@ -320,6 +322,7 @@ void split(const int key_input, const int child_right_input, page_tree* page, in
 		 * pra pagina nova. E depois inseriamos a chave atual na pagina antiga
 		 */
 		pageInsert(*new_page, page->keys[ORDER -2 -size_split], page->child[ORDER-1-size_split-1], page->child[ORDER-1-size_split]);
+		page->child[ORDER-1-size_split] = NIL;
 		page->nKeys--;
 		//page->nKeys--;
 		pageInsert(page, key_input, NIL, child_right_input);
@@ -352,6 +355,7 @@ void split(const int key_input, const int child_right_input, page_tree* page, in
 	}
 
 	(*new_page)->child[i] = (*new_page)->child[i+1];
+	(*new_page)->child[i+1] = NIL;
 
 	/*remove de fato a chave na nova pagina*/
 	(*new_page)->nKeys--;
