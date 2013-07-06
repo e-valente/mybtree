@@ -29,7 +29,7 @@ typedef struct
 	/*! Numero de chaves dentro do no atual */
 	int nKeys;
 	/*! Array das chaves do no atual */
-	int keys[ORDER-1];
+	long long keys[ORDER-1];
 	/*! Offsets dos filhos do no atual */
 	int child[ORDER];	
 } page_tree;
@@ -40,7 +40,7 @@ typedef struct
 	/*! Numero de chaves dentro do no atual */
 	int nKeys;
 	/*! Array das chaves do no atual */
-	int keys[ORDER];
+	long long keys[ORDER];
 	/*! Offsets dos filhos do no atual */
 	int child[ORDER+1];	
 } page_tree_buffer;
@@ -62,7 +62,7 @@ int offset_left;
  * 		Retorna a posicao da chave dentro do no onde ela foi encontrada.
  * \return Retorna ENCONTROU ou NAO_ENCONTROU
  */ 
-int search(const int offset, int pKey, int* offset_found, int* pos_found);
+int search(const int offset, long long pKey, int* offset_found, int* pos_found);
 
 /*! Funcao que dado um Offset, carrega em memoria principal o no 
  * 		correspondente.
@@ -81,7 +81,7 @@ page_tree* loadPage(const int offset);
  * 		do no filho onde ha a possibilidade de encontrar a chave
  * \return Retorna ENCONTROU ou NAO_ENCONTROU
  */
-int pageSearch(const page_tree* curr_page, int key, int* pos);
+int pageSearch(const page_tree* curr_page, long long key, int* pos);
 
 /*! Funcao que insere novas chaves na arvore B, caso seja necessario
  *  cria uma nova raiz
@@ -90,7 +90,7 @@ int pageSearch(const page_tree* curr_page, int key, int* pos);
  * \param key  chave a ser inserida
  * 
  */
-int insert(int offset, int key);
+int insert(int offset, long long key);
 
 /*! Funcao que insere uma chave em uma pagina
  *  ->a pagina devera ter espaco disponivel
@@ -98,7 +98,7 @@ int insert(int offset, int key);
  * \param key chave a ser inserida
  * \param offset_right_child offset do filho da direita da chave promovida
  */
-void pageInsert(page_tree *curr_page, int key, const int offset_left_child, const int offset_right_child);
+void pageInsert(page_tree *curr_page, long long key, const int offset_left_child, const int offset_right_child);
 
 /*! Funcao para inserir chave na arvore, quando nao num novo no raiz
  * \param offset offset da raiz da arvore
@@ -107,7 +107,7 @@ void pageInsert(page_tree *curr_page, int key, const int offset_left_child, cons
  * \param key_promoted parametro de retorno, indica a chave promovida
  * \return PROMOTED, NOT_PROMOTED, ERROR
  */
-int insertKey(int offset, int key, int* child_left_promoted, int* child_right_promoted, int* key_promoted);
+int insertKey(int offset, long long key, int* child_left_promoted, int* child_right_promoted, long long* key_promoted);
 
 /*! Funcao que aloca uma nova pagina, na memoria principal
  * \param newpage ponteiro para uma pagina a ser alocada e inicializada
@@ -149,11 +149,11 @@ void open_initialize_file();
  * \param new_page nova pagina criada para distribuicao dos elementos
  * 
  */
-void split(const int key_input, const int child_right_input, page_tree* page, int* key_promoted, int* child_left_promoted, int* child_right_promoted, page_tree** new_page);
+void split(const long long key_input, const int child_right_input, page_tree* page, long long* key_promoted, int* child_left_promoted, int* child_right_promoted, page_tree** new_page);
 
 /*retorna o offset da pagina de  onde achou a key
  *
  */
-int searchKeyOnBTree(int offset, int key);
+int searchKeyOnBTree(int offset, long long key);
 
 #endif /*BTREE_H_*/

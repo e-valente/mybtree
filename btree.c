@@ -1,6 +1,6 @@
 #include "btree.h"
 
-int search(const int offset, int pKey, int* offset_found, int* pos_found)
+int search(const int offset, long long pKey, int* offset_found, int* pos_found)
 {
 	int pos = 0;
 	if (offset == -1)return FAIL;
@@ -31,7 +31,7 @@ page_tree* loadPage(int offset)
 	return return_page;
 }
 
-int pageSearch(const page_tree* curr_page, int pKey, int* pos)
+int pageSearch(const page_tree* curr_page, long long pKey, int* pos)
 {
 	int i;
 	for (i = 0; i < curr_page->nKeys; i++)
@@ -51,9 +51,9 @@ int pageSearch(const page_tree* curr_page, int pKey, int* pos)
 	return FAIL;	
 }
 
-int insert(int offset, int key) {
+int insert(int offset, long long key) {
 
-	int key_promoted = -1;
+	long long key_promoted = -1;
 	int return_value = -1;
 	int new_offset = -1;
 	int offset_child_right = -1;
@@ -70,7 +70,6 @@ int insert(int offset, int key) {
 		page->child[0] = offset_left;
 		page->child[0] = offset_child_left;
 
-		printf("CRIANDO NOVO NÓ COM key %d e left vale %d\n", key_promoted, offset_child_left);
 		// move o ponteiro para o final do arquivo para pegar a posicao da nova pagina
 		fseek(bTreeFile, 0L, SEEK_END);
 		new_offset = ftell(bTreeFile);
@@ -83,7 +82,7 @@ int insert(int offset, int key) {
 	return return_value;
 }
 
-int insertKey(int offset, int key, int* child_left_promoted, int* child_right_promoted, int* key_promoted)
+int insertKey(int offset, long long key, int* child_left_promoted, int* child_right_promoted, long long* key_promoted)
 {
 	page_tree *curr_page; // pagina atual para busca
 	page_tree *new_page; // pagina para split
@@ -106,7 +105,7 @@ int insertKey(int offset, int key, int* child_left_promoted, int* child_right_pr
 	int return_value = -1;
 	int right_offset_child_promoted = -1;
 	int left_offset_child_promoted = -1;
-	int key_promotion = -1;
+	long long key_promotion = -1;
 	return_value = insertKey(curr_page->child[pos], key, &left_offset_child_promoted, &right_offset_child_promoted, &key_promotion);
 
 	// verifica se nao eh necessaria mais nenhuma operacao na arvore
@@ -124,7 +123,7 @@ int insertKey(int offset, int key, int* child_left_promoted, int* child_right_pr
 	}
 
 	// se a chave nao couber na pagina, realiza split
-	fprintf(stderr, "chamando split... offset vale %d e chave vale %d\n", offset, key_promotion);
+	//fprintf(stderr, "chamando split... offset vale %d e chave vale %lld\n", offset, key_promotion);
 
 	split(key_promotion, right_offset_child_promoted, curr_page, key_promoted, child_left_promoted, child_right_promoted, &new_page);
 	*child_left_promoted = offset;
@@ -178,7 +177,7 @@ void resetPage(page_tree *page) {
 	page->nKeys = 0; // total de chaves
 }
 
-void pageInsert(page_tree *curr_page, int key, const int offset_left_child, const int offset_right_child) {
+void pageInsert(page_tree *curr_page, long long key, const int offset_left_child, const int offset_right_child) {
 
 	int i;
 	// se a pagina for nova, e estiver vazia
@@ -231,18 +230,18 @@ void printBTree(int offset, int altura)
 	printf("Altura: %d | num. Chaves: %d | chaves = [ ", altura, nextPage->nKeys);
 
 	for (i = 0; i < nextPage->nKeys; i++) {
-		printf("%d ", nextPage->keys[i]);
+		printf("%lld ", nextPage->keys[i]);
 	}
 
 	printf("]\n");
 
 	for (i = 0; i < ORDER; i++) {
-		printf("filho %d de onde tem a chave %d vale %d\n", i, nextPage->keys[1], nextPage->child[i]);
+		//printf("filho %d de onde tem a chave %lld vale %d\n", i, nextPage->keys[1], nextPage->child[i]);
 		printBTree(nextPage->child[i], altura + 1);
 	}
 }
 
-int searchKeyOnBTree(int offset, int key)
+int searchKeyOnBTree(int offset, long long key)
 {
 	if(offset == NIL) return -1;
 	int i;
@@ -266,17 +265,12 @@ int searchKeyOnBTree(int offset, int key)
 }
 
 //split(key_promotion, offset_child_promoted, curr_page, key_promoted, child_right_promoted, &new_page);
-void split(const int key_input, const int child_right_input, page_tree* page, int* key_promoted, int* child_left_promoted, int* child_right_promoted, page_tree** new_page)
+void split(const long long key_input, const int child_right_input, page_tree* page, long long* key_promoted, int* child_left_promoted, int* child_right_promoted, page_tree** new_page)
 {
-	int i, tmp_key;
+	int i;
 	int size_split;
 	int key_idx, child_idx;
-	printf("inserindo chave %d\n", key_input);
-
-	if(key_input == 3)
-	{
-		printf("vai\n");
-	}
+	//printf("inserindo chave %lld\n", key_input);
 
 	/*aloca nova pagina
 	 *note que new_page
