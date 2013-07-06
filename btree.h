@@ -98,7 +98,7 @@ int insert(int offset, int key);
  * \param key chave a ser inserida
  * \param offset_right_child offset do filho da direita da chave promovida
  */
-void pageInsert(page_tree *curr_page, int key, const int offset_right_child);
+void pageInsert(page_tree *curr_page, int key, const int offset_left_child, const int offset_right_child);
 
 /*! Funcao para inserir chave na arvore, quando nao num novo no raiz
  * \param offset offset da raiz da arvore
@@ -107,7 +107,7 @@ void pageInsert(page_tree *curr_page, int key, const int offset_right_child);
  * \param key_promoted parametro de retorno, indica a chave promovida
  * \return PROMOTED, NOT_PROMOTED, ERROR
  */
-int insertKey(int offset, int key, int* child_right_promoted, int* key_promoted);
+int insertKey(int offset, int key, int* child_left_promoted, int* child_right_promoted, int* key_promoted);
 
 /*! Funcao que aloca uma nova pagina, na memoria principal
  * \param newpage ponteiro para uma pagina a ser alocada e inicializada
@@ -149,7 +149,7 @@ void open_initialize_file();
  * \param new_page nova pagina criada para distribuicao dos elementos
  * 
  */
-void split(const int key_input, const int child_right_input, page_tree* page, int* key_promoted, int* child_right_promoted, page_tree** new_page);
+void split(const int key_input, const int child_right_input, page_tree* page, int* key_promoted, int* child_left_promoted, int* child_right_promoted, page_tree** new_page);
 
 /*retorna o offset da pagina de  onde achou a key
  *

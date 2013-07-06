@@ -17,7 +17,7 @@ int main(void)
 	insert(offset_root, 4);
 	insert(offset_root, 3);
 	insert(offset_root, 2);
-	insert(offset_root, 1);
+    insert(offset_root, 1);
 	//insert(offset_root, 1);
 
   //	printBTree();
